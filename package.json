@@ -6,7 +6,6 @@
 , "dependencies": {
     "async": "~0.2.9"
   , "request": "~2.22.0"
-  , "underscore": "~1.5.0"
   , "oauthic": "~0.1.0"
   }
 , "devDependencies": {
@@ -24,6 +23,6 @@
 , "author": "XiNGRZ <chenxingyu92@gmail.com>"
 , "repository": {
     "type": "git"
-  , "url": "git@github.com:bestng/oauthic.git"
+  , "url": "git@github.com:bestng/oauthic-weibo.git"
   }
 }

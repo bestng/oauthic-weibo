@@ -25,7 +25,7 @@
 , "author": "XiNGRZ <chenxingyu92@gmail.com>"
 , "repository": {
     "type": "git"
-  , "url": "git@github.com:bestng/oauthic-weibo.git"
+  , "url": "https://github.com/bestng/oauthic-weibo.git"
   }
 , "bugs": "https://github.com/bestng/oauthic-weibo/issues"
 , "license": "MIT"

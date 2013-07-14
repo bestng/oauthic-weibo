@@ -10,6 +10,8 @@
   }
 , "devDependencies": {
     "mocha": "*"
+  , "mocha-lcov-reporter": "*"
+  , "coveralls": "*"
   , "should": "*"
   , "restify": "*"
   , "blanket": "*"
@@ -25,4 +27,7 @@
     "type": "git"
   , "url": "git@github.com:bestng/oauthic-weibo.git"
   }
+, "bugs": "https://github.com/bestng/oauthic-weibo/issues"
+, "license": "MIT"
+, "engines" : { "node" : ">=0.8" }
 }

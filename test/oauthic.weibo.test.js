@@ -245,4 +245,3 @@ describe('oauthic.weibo.test.js', function () {
 
   })
 })
-

@@ -6,17 +6,17 @@ OAuthic Weibo
 [![Dependency Status](https://david-dm.org/bestng/oauthic-weibo.png)](https://david-dm.org/bestng/oauthic-weibo)
 [![NPM version](https://badge.fury.io/js/oauthic-weibo.png)](http://badge.fury.io/js/oauthic-weibo)
 
-最简单的 OAuth 2.0 请求库。
+Yet another beautiful wrapped [mikeal/request](https://github.com/mikeal/request) with OAuth 2.0 feature for Sina Weibo.
 
-## 安装
+## Install
 
 ```sh
 npm install oauthic-weibo
 ```
 
-## 快速上手
+## Quick-start
 
-授权：
+Authorize:
 
 ```js
 require('oauthic-weibo')
@@ -26,118 +26,100 @@ require('oauthic-weibo')
   })
 ```
 
-请求：
+Request:
 
 ```js
 var client = require('oauthic-weibo').client(clientInfo)
   .token(accessToken, expiresAt)
   .expired(onExpired)
 
-client.get('/statuses/user_timeline.json', function (err, timeline) {
+client.get('/statuses/user_timeline.json', function (err, res, timeline) {
   // ...
 })
 ```
 
 ## oauthic.client(clientInfo)
 
-创建一个客户端对象。
+Create a new client instance.
 
-参数：
+Arguments:
 
-- **clientInfo** Object - 客户端信息
+- **clientInfo** Object - Client informations
     - **clientId** String - App Key
     - **clientScrect** String - App Secret
-    - **callbackUri** String - 授权回调页面的 URL
+    - **callbackUri** String - URL to be redirected to by the provider.
 
-返回：
+Returns:
 
-- oauthic.Client - 客户端实例
+- oauthic.Client - Client instance
 
 ## Class: oauthic.Client
 
-客户端，一个经过改造的 [mikeal/request](https://github.com/mikeal/request) 实例。
+Client, a wrapped [mikeal/request](https://github.com/mikeal/request) instance.
 
 ### client.authorize([options])
 
-返回授权页面 URL。
+Build the URL of the authorization page.
 
-参数：
+Arguments:
 
-- ***options*** - 附加选项
-    - ***scope*** String | Array - 附加权限。可以是 Array 或者以逗号 `,` 分隔的 String
-    - ***state*** String - 会被传递到 `redirectUri` 的参数，建议合理使用以防范 CSRF 攻击
-    - ***display*** String - 授权页面显示类型，可取值：
-        - default - 默认，适用于桌面浏览器
-        - mobile - 适用于智能手机
-        - wap - 适用于只支持 WAP 的非智能手机
-        - client - 适用于桌面客户端
-    - ***forcelogin*** Boolean - 是否强制用户重新登录
-    - ***language*** String - 授权页语言，`en` 为英文。
+- ***options*** - Additional parameters
+    - ***scope*** String | Array - Additional scopes. Should be an array or a string separated by `,`
+    - ***state*** String - A parameter that would be in the query string in `redirectUri`. It's useful in avoiding CSRF attacking
+    - ***display*** String - Determine how the authorization page would looks. Should be:
+        - default - For desktop browsers
+        - mobile - For mobile devices
+        - wap - For cellphones that support WAP only
+        - client - For desktop clients
+    - ***forcelogin*** Boolean - Determine whether to force a login.
+    - ***language*** String - Language of the authorization page. Would be Simplified-Chinese without this parameter. For English set it to `en`.
 
-返回：
+Returns:
 
-- String - 微博授权页面的 URL
+- String - URL of the authorization page
 
 ### client.credentical(code, callback)
 
-使用 Authorization Code 换取 Access Token 并准备好发起请求。
+Get Access Token with an Authorization Code and get ready for making a request.
 
-参数：
+Arguments:
 
 - **code** String - Authorization Code
-- **callback(err, credentical, userInfo)** Function - 回调
-    - **err** Error | null - 错误对象
-    - **credentical** Object - Token 信息
+- **callback(err, credentical, userInfo)** Function - Callback
+    - **err** Error | null - Error object
+    - **credentical** Object - Token informations
         - **accessToken** String - Access Token
-        - ***refreshToken*** String - 可选，Refresh Token，如果不支持刷新则没有此字段
-        - **expiresAt** Date - Access Token 的过期时间
-    - **userInfo** Object - 其它用户信息
-        - **id** String - 用户在该平台的唯一标识符
-        - **picture** String - 用户头像地址
+        - **expiresAt** Date - The time when Access Token expires
+    - **userInfo** Object - Additional user informations
+        - **id** String - The user's unique ID
+        - **picture** String - The URL of user's avatar picture
         - ...
 
-返回：
+Returns:
 
-- oauthic.Client - 客户端实例
+- oauthic.Client - Client instance
 
 ### client.token(accessToken[, expiresAt])
 
-设置 Access Token。
+Set the Access Token.
 
-参数：
+Arguments:
 
 - **accessToken** String - Access Token
-- ***expiresAt*** Date | Number - 可选，Access Token 的过期时间
+- ***expiresAt*** Date | Number - Optional. The time when Access Token expires
 
-返回：
+Returns:
 
-- oauthic.Client - 客户端实例
-
-### client.refresh(refreshToken, onRefreshed)
-
-设置 Refresh Token。
-
-参数：
-
-- **refreshToken** String - Refresh Token
-- **onRefreshed(token, expiresAt, done)** - 当 Access Token 成功刷新时会被调用
-    - **token** String - 新的 Access Token
-    - **expiresAt** Date - 新 Token 的过期时刻
-    - **done(err)** Function - 处理完后的回调
-        - **err** Error | null - 如果有错可返回
-
-返回：
-
-- oauthic.Client - 客户端实例
+- oauthic.Client - Client instance
 
 ### client.expired(onExpired)
 
-用于当 Token 过期并且无法刷新时的处理。
+Registers a handler that would be called when the Access Token is expired and could not be refreshed.
 
-参数：
+Arguments:
 
-- **onExpired(token)** Function - 处理函数
-    - **token** String - 已过期的 Access Token
+- **onExpired(token)** Function - Handler function
+    - **token** String - The expired Access Token
 
 ### client(uri[, options][, callback])
 ### client.get(uri[, options][, callback])
@@ -147,22 +129,22 @@ client.get('/statuses/user_timeline.json', function (err, timeline) {
 ### client.head(uri[, options][, callback])
 ### client.del(uri[, options][, callback])
 
-基础库 [mikeal/request](https://github.com/mikeal/request) 中经过处理的方法，自动添加了 Access Token 等必备参数，以及能够将 URL 如 `https://api.weibo.com/2/statuses/update.json` 简写为 `/statuses/update.json`。
+Wrapped methods from [mikeal/request](https://github.com/mikeal/request). General parameters (e.g. access token) is added. URL could be written in short form, e.g. `/statuses/update.json` for `https://api.weibo.com/2/statuses/update.json`.
 
-错误：
+Errors:
 
-- oauthic.TokenExpiredError - Access Token 已过期并且无法刷新。
+- oauthic.TokenExpiredError - The Access Token is expired and could not be refreshed
 
 ### client.accessToken
 
 - String
 
-返回用户的 Access Token。通常用于需要自己构建请求的情况。
+Returns the current user's Access Token. Useful when you'd prefer building request parameters manually.
 
 ## oauthic.TokenExpiredError
 
-当 Access Token 已过期并且无法刷新时抛出的错误。
+Occurs when the Access Token is expired and could not be refreshed.
 
-属性：
+Properties:
 
-- **token** String - 已过期的 Access Token
+- **token** String - The expired Access Token

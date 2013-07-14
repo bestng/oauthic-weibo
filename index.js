@@ -19,14 +19,33 @@ exports.Client = Client
 Client.prototype.BASE_URL = 'https://api.weibo.com/2'
 Client.prototype.OAUTH2_URL = 'https://api.weibo.com/oauth2'
 
-Client.prototype._authorize = function (clientInfo, options) {
+// Actually, Weibo supports GET and POST only.
+!['get', 'post'].forEach(function (key) {
+  var original = Client.prototype[key]
+  Client.prototype[key] = function (uri, options, callback) {
+    if ('function' === typeof options) {
+      callback = options
+      options = {}
+    }
+
+    options = options || {}
+
+    if ('undefined' === typeof options.json) {
+      options.json = true
+    }
+
+    return original.call(this, uri, options, callback)
+  }
+})
+
+Client.prototype._authorize = function (options) {
   this.clientInfo = this.clientInfo || {}
   options = options || {}
 
   var query = {}
 
-  query['client_id'] = clientInfo.clientId
-  query['redirect_uri'] = clientInfo.redirectUri
+  query['client_id'] = this.clientInfo.clientId
+  query['redirect_uri'] = this.clientInfo.redirectUri
 
   if (options.scope) {
     query['scope'] = Array.isArray(options.scope)
@@ -68,17 +87,10 @@ Client.prototype._credentical = function (code, callback) {
         , 'grant_type': 'authorization_code'
         , 'code': code
         }
-      }, function (err, res, body) {
+      , json: true
+      }, function (err, res, json) {
         if (err) {
           return next(err)
-        }
-
-        var json
-        try {
-          json = JSON.parse(body)
-        }
-        catch (e) {
-          return next(e)
         }
 
         if (json.error) {
@@ -97,17 +109,10 @@ Client.prototype._credentical = function (code, callback) {
         form: {
           'access_token': credentical.accessToken
         }
-      }, function (err, res, body) {
+      , json: true
+      }, function (err, res, json) {
         if (err) {
           return next(err)
-        }
-
-        var json
-        try {
-          json = JSON.parse(body)
-        }
-        catch (e) {
-          return next(e)
         }
 
         if (json.error) {

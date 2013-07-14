@@ -1,6 +1,6 @@
 {
   "name": "oauthic-weibo"
-, "version": "0.1.0"
+, "version": "0.1.1"
 , "description": "Super-simple OAuth 2.0 request."
 , "main": "index.js"
 , "dependencies": {

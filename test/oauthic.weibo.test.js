@@ -14,11 +14,11 @@ var token_created_at = Math.round(+new Date() / 1000)
 
 server.post('/2/protected', function (req, res, next) {
   if ('OAuth2 correct_token' == req.header('authorization')) {
-    res.send(200, 'token:correct_token')
+    res.send(200, { 'token': 'correct_token' })
     return next()
   }
   else {
-    res.send(400, 'wrong')
+    res.send(400, { 'error': 'unauthorized' })
     return next()
   }
 })
@@ -218,6 +218,7 @@ describe('oauthic.weibo.test.js', function () {
       client.post('/protected', function (err, res, body) {
         should.not.exist(err)
         should.exist(body)
+        body.should.have.property('error', 'unauthorized')
         done()
       })
     })
@@ -238,7 +239,7 @@ describe('oauthic.weibo.test.js', function () {
       client.post('/protected', function (err, res, body) {
         should.not.exist(err)
         should.exist(body)
-        body.should.equal('"token:correct_token"')
+        body.should.have.property('token', 'correct_token')
         done()
       })
     })

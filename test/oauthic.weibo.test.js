@@ -105,39 +105,97 @@ describe('oauthic.weibo.test.js', function () {
         , redirectUri: 'correct_redirect_uri'
         })
 
-        it('should returns correct authorize url', function () {
-          var url = client.authorize({ state: 'test' })
+        var parse = require('querystring').parse
+
+        it('should returns correct authorize url with options', function () {
+          var url = client.authorize({
+            scope: ['profile', 'message']
+          , state: 'test'
+          , display: 'wap'
+          , forcelogin: true
+          , language: 'en'
+          })
+
           url.should.be.a('string')
+
+          var search = url.indexOf('?')
+          search.should.above(0)
+
+          var query = parse(url.slice(search + 1))
+          query.should.have.property('client_id', 'correct_client_id')
+          query.should.have.property('redirect_uri', 'correct_redirect_uri')
+          query.should.have.property('scope', 'profile,message')
+          query.should.have.property('state', 'test')
+          query.should.have.property('display', 'wap')
+          query.should.have.property('forcelogin', 'true')
+          query.should.have.property('language', 'en')
+        })
+
+        it('should returns correct authorize url without options', function () {
+          var url = client.authorize()
+
+          url.should.be.a('string')
+
+          var search = url.indexOf('?')
+          search.should.above(0)
+
+          var query = parse(url.slice(search + 1))
+          query.should.have.property('client_id', 'correct_client_id')
+          query.should.have.property('redirect_uri', 'correct_redirect_uri')
+          query.should.not.have.property('scope')
+          query.should.not.have.property('state')
+          query.should.not.have.property('display')
+          query.should.not.have.property('forcelogin')
+          query.should.not.have.property('language')
         })
 
       })
 
       describe('client.credentical(code, callback)', function () {
 
-        var client = oauthic.client({
-          clientId: 'correct_client_id'
-        , clientSecret: 'correct_client_secret'
-        , redirectUri: 'correct_redirect_uri'
-        })
+        !(function () {
+          var client = oauthic.client({
+            clientId: 'correct_client_id'
+          , clientSecret: 'correct_client_secret'
+          , redirectUri: 'correct_redirect_uri'
+          })
 
-        it('should callback `credentical` and `userInfo` if success', function (done) {
+          it('should callback `credentical` and `userInfo` if success', function (done) {
+            client.credentical('correct_code', function (err, credentical, userInfo) {
+              should.not.exist(err)
+
+              should.exist(credentical)
+              should.exist(credentical.accessToken)
+              should.exist(credentical.expiresAt)
+
+              should.exist(userInfo)
+              should.exist(userInfo.id)
+              should.exist(userInfo.picture)
+
+              done()
+            })
+          })
+
+          it('should set `client.accessToken` after success', function () {
+            client.should.have.property('accessToken', 'correct_token')
+          })
+        })()
+
+        it('should fails if the api returns an error', function (done) {
+          var client = oauthic.client()
           client.credentical('correct_code', function (err, credentical, userInfo) {
-            should.not.exist(err)
-
-            should.exist(credentical)
-            should.exist(credentical.accessToken)
-            should.exist(credentical.expiresAt)
-
-            should.exist(userInfo)
-            should.exist(userInfo.id)
-            should.exist(userInfo.picture)
-
+            should.exist(err)
             done()
           })
         })
 
-        it('should set `client.accessToken` after success', function () {
-          client.should.have.property('accessToken', 'correct_token')
+        it('should fails if the request occurs an error', function (done) {
+          var client = oauthic.client()
+          client.OAUTH2_URL = 'http://localhost:2'
+          client.credentical('correct_code', function (err, credentical, userInfo) {
+            should.exist(err)
+            done()
+          })
         })
 
       })
@@ -216,6 +274,7 @@ describe('oauthic.weibo.test.js', function () {
 
     it('should request without token before authorize', function (done) {
       client.post('/protected', function (err, res, body) {
+        res.should.be.json
         should.not.exist(err)
         should.exist(body)
         body.should.have.property('error', 'unauthorized')
@@ -237,6 +296,7 @@ describe('oauthic.weibo.test.js', function () {
 
     it('should request with token after authorized', function (done) {
       client.post('/protected', function (err, res, body) {
+        res.should.be.json
         should.not.exist(err)
         should.exist(body)
         body.should.have.property('token', 'correct_token')

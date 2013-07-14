@@ -132,12 +132,6 @@ Client.prototype._credentical = function (code, callback) {
   ], callback)
 }
 
-Client.prototype._refresh = function (refreshToken, callback) {
-  // 微博不支持 Refresh Token
-  // 所以这里啥都没有
-  callback(new Error('Refresh Token is not suppported by Weibo.'))
-}
-
 Client.prototype._use = function (options) {
   options.headers = options.headers || {}
 

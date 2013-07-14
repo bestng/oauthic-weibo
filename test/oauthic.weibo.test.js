@@ -244,26 +244,5 @@ describe('oauthic.weibo.test.js', function () {
     })
 
   })
-
-  describe('apis', function () {
-
-    var client = oauthic
-      .client({
-        clientId: 'correct_client_id'
-      , clientSecret: 'correct_client_secret'
-      , redirectUri: 'correct_redirect_uri'
-      })
-      .token('correct_token', +new Date() + 10 * 60 * 1000)
-
-    it('statuses/update', function () {
-
-    })
-
-    it('statuses/upload', function () {
-
-    })
-
-  })
-
 })
 

@@ -121,15 +121,11 @@ Arguments:
 - **onExpired(token)** Function - Handler function
     - **token** String - The expired Access Token
 
-### client(uri[, options][, callback])
-### client.get(uri[, options][, callback])
-### client.post(uri[, options][, callback])
-### client.put(uri[, options][, callback])
-### client.patch(uri[, options][, callback])
-### client.head(uri[, options][, callback])
-### client.del(uri[, options][, callback])
+### client.get(uri[, options][, callback]), client.post(uri[, options][, callback])
 
 Wrapped methods from [mikeal/request](https://github.com/mikeal/request). General parameters (e.g. access token) is added. URL could be written in short form, e.g. `/statuses/update.json` for `https://api.weibo.com/2/statuses/update.json`.
+
+Actually, Sina Weibo supports GET and POST only, so other methods is not tested or documented.
 
 Errors:
 

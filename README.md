@@ -15,7 +15,7 @@ npm install oauthic-weibo
 
 ## Quick-start
 
-Authorize:
+#### Authorize
 
 ```js
 require('oauthic-weibo')
@@ -25,7 +25,7 @@ require('oauthic-weibo')
   })
 ```
 
-Request:
+#### Request
 
 ```js
 var client = require('oauthic-weibo').client(clientInfo)
@@ -41,14 +41,14 @@ client.get('/statuses/user_timeline.json', function (err, res, timeline) {
 
 Create a new client instance.
 
-Arguments:
+#### Arguments
 
 - **clientInfo** Object - Client informations
     - **clientId** String - App Key
     - **clientScrect** String - App Secret
     - **callbackUri** String - URL to be redirected to by the provider.
 
-Returns:
+#### Returns
 
 - oauthic.Client - Client instance
 
@@ -60,7 +60,7 @@ Client, a wrapped [mikeal/request](https://github.com/mikeal/request) instance.
 
 Build the URL of the authorization page.
 
-Arguments:
+#### Arguments
 
 - ***options*** - Additional parameters
     - ***scope*** String | Array - Additional scopes. Should be an array or a string separated by `,`
@@ -73,7 +73,7 @@ Arguments:
     - ***forcelogin*** Boolean - Determine whether to force a login.
     - ***language*** String - Language of the authorization page. Would be Simplified-Chinese without this parameter. For English set it to `en`.
 
-Returns:
+#### Returns
 
 - String - URL of the authorization page
 
@@ -81,7 +81,7 @@ Returns:
 
 Get Access Token with an Authorization Code and get ready for making a request.
 
-Arguments:
+#### Arguments
 
 - **code** String - Authorization Code
 - **callback(err, credentical, userInfo)** Function - Callback
@@ -94,7 +94,7 @@ Arguments:
         - **picture** String - The URL of user's avatar picture
         - ...
 
-Returns:
+#### Returns
 
 - oauthic.Client - Client instance
 
@@ -102,12 +102,12 @@ Returns:
 
 Set the Access Token.
 
-Arguments:
+#### Arguments
 
 - **accessToken** String - Access Token
 - ***expiresAt*** Date | Number - Optional. The time when Access Token expires
 
-Returns:
+#### Returns
 
 - oauthic.Client - Client instance
 
@@ -115,7 +115,7 @@ Returns:
 
 Registers a handler that would be called when the Access Token is expired and could not be refreshed.
 
-Arguments:
+#### Arguments
 
 - **onExpired(token)** Function - Handler function
     - **token** String - The expired Access Token
@@ -126,7 +126,7 @@ Wrapped methods from [mikeal/request](https://github.com/mikeal/request). Genera
 
 Actually, Sina Weibo supports GET and POST only, so other methods is not tested or documented.
 
-Errors:
+#### Errors
 
 - oauthic.TokenExpiredError - The Access Token is expired and could not be refreshed
 
@@ -140,7 +140,7 @@ Returns the current user's Access Token. Useful when you'd prefer building reque
 
 Occurs when the Access Token is expired and could not be refreshed.
 
-Properties:
+#### Properties
 
 - **token** String - The expired Access Token
 

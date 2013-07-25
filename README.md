@@ -1,4 +1,4 @@
-![OAuthic for Weibo APIs](logo.png)
+![OAuthic for Weibo APIs](https://github.com/bestng/oauthic-weibo/raw/master/logo.png)
 
 [![Build Status](https://travis-ci.org/bestng/oauthic-weibo.png?branch=master)](https://travis-ci.org/bestng/oauthic-weibo)
 [![Coverage Status](https://coveralls.io/repos/bestng/oauthic-weibo/badge.png)](https://coveralls.io/r/bestng/oauthic-weibo)
